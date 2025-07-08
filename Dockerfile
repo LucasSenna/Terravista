@@ -12,18 +12,30 @@ FROM php:8.3-fpm
 ARG user=lucas
 ARG uid=1000
 
+# Instala dependências do sistema + libicu-dev para o intl
 RUN apt-get update && apt-get install -y \
     git \
     curl \
     libpng-dev \
     libonig-dev \
     libxml2-dev \
+    libzip-dev \
+    libpq-dev \
+    libicu-dev \
     zip \
     unzip \
-    libpq-dev \
-    && docker-php-ext-install pdo_pgsql mbstring exif pcntl bcmath gd sockets \
+    && docker-php-ext-install \
+        pdo_pgsql \
+        mbstring \
+        exif \
+        pcntl \
+        bcmath \
+        gd \
+        sockets \
+        intl \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
+# Instala Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
 # Redis
