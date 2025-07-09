@@ -17,6 +17,10 @@ use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
 use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
+use App\Filament\Widgets\TotalObrasAndamento;
+use App\Filament\Widgets\ContasPagarMes;
+use App\Filament\Widgets\TotalMateriaisEstoque;
+use App\Filament\Widgets\TotalPrevistoOrcamento;
 
 class AdminPanelProvider extends PanelProvider
 {
@@ -39,8 +43,10 @@ class AdminPanelProvider extends PanelProvider
             ->topNavigation() //menu em cima
             ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\\Filament\\Widgets')
             ->widgets([
-                Widgets\AccountWidget::class,
-                Widgets\FilamentInfoWidget::class,
+                TotalObrasAndamento::class,
+                ContasPagarMes::class,
+                TotalMateriaisEstoque::class,
+                TotalPrevistoOrcamento::class,
             ])
             ->middleware([
                 EncryptCookies::class,

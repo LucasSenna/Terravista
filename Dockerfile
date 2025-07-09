@@ -12,7 +12,7 @@ FROM php:8.3-fpm
 ARG user=lucas
 ARG uid=1000
 
-# Instala dependências do sistema + libicu-dev para o intl
+# Instala dependências do sistema
 RUN apt-get update && apt-get install -y \
     git \
     curl \
@@ -22,38 +22,48 @@ RUN apt-get update && apt-get install -y \
     libzip-dev \
     libpq-dev \
     libicu-dev \
+    libxslt1-dev \
+    libxrender1 \
+    libfontconfig \
+    libfreetype6 \
+    libjpeg62-turbo \
+    libxext6 \
+    ghostscript \
+    libreoffice \
     zip \
     unzip \
     && docker-php-ext-install \
-        pdo_pgsql \
-        mbstring \
-        exif \
-        pcntl \
-        bcmath \
-        gd \
-        sockets \
-        intl \
-    && apt-get clean && rm -rf /var/lib/apt/lists/*
+    pdo_pgsql \
+    mbstring \
+    exif \
+    pcntl \
+    bcmath \
+    gd \
+    sockets \
+    intl \
+    zip \
+&& apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Instala Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-# Redis
+# Instala Redis
 RUN pecl install -o -f redis \
     && rm -rf /tmp/pear \
     && docker-php-ext-enable redis
 
-# Config PHP
+# Configurações personalizadas do PHP
 COPY docker/php/custom.ini /usr/local/etc/php/conf.d/custom.ini
 
 # Criação de usuário não-root
 RUN useradd -G www-data,root -u $uid -d /home/$user $user
 RUN mkdir -p /home/$user/.composer && chown -R $user:$user /home/$user
 
+# Diretório de trabalho
 WORKDIR /var/www
 COPY --chown=$user:$user . .
 
-# Copia os assets buildados
+# Copia os assets buildados pelo Node
 COPY --from=nodebuilder /app/public/build ./public/build
 
 USER $user

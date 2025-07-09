@@ -29,40 +29,60 @@ class ContratoResource extends Resource
 
             Forms\Components\Select::make('obra_id')
                 ->label('Obra')
-                ->relationship('obra', 'nome')
-                ->searchable()
-                ->preload()
-                ->nullable(),
-
-            Forms\Components\TextInput::make('tipo')
-                ->label('Tipo de Contrato')
-                ->placeholder('Ex: equipamento, serviço')
-                ->required(),
+                ->relationship('obra', 'nome'),
 
             Forms\Components\TextInput::make('numero_contrato')
-                ->label('Nº do Contrato'),
+                ->label('Número do Contrato'),
 
             Forms\Components\DatePicker::make('data_contrato')
                 ->label('Data do Contrato'),
 
+            Forms\Components\DatePicker::make('inicio_locacao')
+                ->label('Início da Locação'),
+
+            Forms\Components\TextInput::make('tipo_faturamento')
+                ->label('Tipo de Faturamento'),
+
+            Forms\Components\TextInput::make('forma_pagamento')
+                ->label('Forma de Pagamento'),
+
+            Forms\Components\TextInput::make('valor_mensal')
+                ->label('Valor Mensal')
+                ->numeric(),
+
+            Forms\Components\TextInput::make('horas_mensais')
+                ->label('Horas Mensais')
+                ->numeric()
+                ->default(200),
+
+            Forms\Components\TextInput::make('taxa_kit_capa')
+                ->label('Taxa do Kit Capa')
+                ->numeric(),
+
+            Forms\Components\Textarea::make('descricao_equipamento')
+                ->label('Descrição do Equipamento')
+                ->rows(3),
+
+            Forms\Components\Textarea::make('dados_bancarios')
+                ->label('Dados Bancários')
+                ->rows(3),
+
+            Forms\Components\Textarea::make('descricao')
+                ->label('Descrição Geral'),
+
             Forms\Components\Select::make('status')
+                ->label('Status')
                 ->options([
                     'rascunho' => 'Rascunho',
                     'assinado' => 'Assinado',
                     'cancelado' => 'Cancelado',
                 ])
-                ->required(),
-
-            Forms\Components\Textarea::make('descricao')
-                ->label('Descrição')
-                ->rows(3),
+                ->default('rascunho'),
 
             Forms\Components\FileUpload::make('arquivo_pdf')
-                ->label('Arquivo do Contrato (PDF)')
-                ->disk('public')
+                ->label('Arquivo Assinado')
                 ->directory('contratos')
-                ->acceptedFileTypes(['application/pdf'])
-                ->nullable(),
+                ->acceptedFileTypes(['application/pdf']),
         ]);
     }
 
